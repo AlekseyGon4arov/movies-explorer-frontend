@@ -1,2 +1,3 @@
 # movies-explorer-frontend
-Дипломный проект "Movies Explorer" - приложение для поиска и просмотра фильмов
+
+[Ссылка на макет](https://disk.yandex.ru/d/HtEbpfcWXEdq5g)
