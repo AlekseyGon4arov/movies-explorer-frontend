@@ -3,7 +3,7 @@ import './Navigation.css';
 import { useLocation, Link } from 'react-router-dom';
 import useResize from '../../hooks/useResize';
 
-const Navigation = ({ isLoggedIn }) => {
+const Navigation = ({ isLoggedIn, isLinksWhite }) => {
   let location = useLocation();
   let size = useResize();
 
@@ -12,7 +12,7 @@ const Navigation = ({ isLoggedIn }) => {
     size.width <= 786 ? ' nav__route-drawer_active ' : ' nav__route_active ';
 
   return (
-    <nav className="nav">
+    <nav className={`nav ${isLinksWhite && 'nav_links-white'}`}>
       {isLoggedIn ? (
         <>
           <div className="nav__movies">
@@ -40,7 +40,7 @@ const Navigation = ({ isLoggedIn }) => {
               }`}
               to="/saved-movies"
             >
-              Сохранённые фильмы
+              Сохраненные фильмы
             </Link>
           </div>
 

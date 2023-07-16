@@ -35,6 +35,10 @@
   cursor: pointer;
 }
 
+.drawer__burger-btn-white {
+  background: url("../../images/icon-burger-white.svg") no-repeat center;
+}
+
 .drawer__close-btn {
   all: unset;
   background: url("../../images/icon-close.svg") no-repeat center;
@@ -61,8 +65,6 @@
   }
 
   .drawer__burger-btn {
-    all: unset;
-    background: url("../../images/icon-burger-min.svg") no-repeat center;
     height: 40px;
     width: 43px;
   }

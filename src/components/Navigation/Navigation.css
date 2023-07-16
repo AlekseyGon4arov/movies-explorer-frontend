@@ -6,6 +6,15 @@
   width: 100%;
 }
 
+.nav_links-white .nav__route {
+  color: #fff;
+}
+
+.nav_links-white .nav__route-account {
+  background-color: transparent;
+  border: 2px solid #f5f5f5;
+}
+
 .nav__default {
   grid-column: 3/-1;
 }
