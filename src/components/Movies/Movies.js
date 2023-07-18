@@ -1,36 +1,90 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Movies.css';
 import SearchForm from '../SearchForm/SearchForm';
 import MoviesCardList from '../MoviesCardList/MoviesCardList';
+import Preloader from '../Preloader/Preloader';
 
-const Movies = ({ movies, onSaveMovie }) => {
+const Movies = ({ movies, savedMovies, onLikeMovie }) => {
   const [filteredMovies, setFilteredMovies] = useState([]);
+  const searchedMovies = localStorage.getItem('searchedMovies');
+  const queries = localStorage.getItem('searchQueryMovies');
+  const [searchQuery, setSearchQuery] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
 
-  const filterMovies = (searchParams) => {
-    let filtered = [];
-    if (searchParams.isShortFilmChecked) {
-      filtered = movies.filter((m) => {
-        return (
-          m.duration <= 40 &&
-          m.nameRU.toLowerCase().trim().includes(searchParams.searchText)
-        );
-      });
-      setFilteredMovies(filtered);
-    } else if (!searchParams.isShortFilmChecked) {
-      filtered = movies.filter((m) => {
-        return m.nameRU.toLowerCase().trim().includes(searchParams.searchText);
-      });
-      setFilteredMovies(filtered);
-    } else {
-      setFilteredMovies(movies);
+  useEffect(() => {
+    if (searchedMovies) {
+      setFilteredMovies(JSON.parse(searchedMovies));
     }
+  }, [searchedMovies]);
+
+  useEffect(() => {
+    if (queries) {
+      setSearchQuery(JSON.parse(queries));
+    }
+  }, [queries]);
+
+  const filterMovies = (query) => {
+    if (!filteredMovies.length) {
+      setIsLoading(true);
+    }
+
+    setTimeout(() => {
+      let filtered = [];
+      localStorage.setItem('searchQueryMovies', JSON.stringify(query));
+
+      if (query.isShortFilmChecked) {
+        filtered = movies.filter((m) => {
+          return (
+            m.duration <= 40 &&
+            m.nameRU.toLowerCase().trim().includes(query.searchText)
+          );
+        });
+
+        setFilteredMovies(filtered);
+        localStorage.setItem('searchedMovies', JSON.stringify(filtered));
+      } else if (!query.isShortFilmChecked) {
+        filtered = movies.filter((m) => {
+          return m.nameRU.toLowerCase().trim().includes(query.searchText);
+        });
+
+        setFilteredMovies(filtered);
+        localStorage.setItem('searchedMovies', JSON.stringify(filtered));
+      }
+        setIsLoading(false);
+    },
+    filteredMovies.length ? 0 : 300
+    );
+  };
+
+  const handleResetInput = () => {
+    setFilteredMovies([]);
+    setSearchQuery({});
+    localStorage.removeItem('searchedMovies');
+    localStorage.removeItem('searchQueryMovies');
   };
 
   return (
     <section className="movies">
-      <SearchForm onFilter={filterMovies} />
-     <MoviesCardList movies={filteredMovies} onSaveMovie={onSaveMovie}/>
-      <button className="movies__more-btn">Ещё</button>
+      <SearchForm
+        onFilter={filterMovies}
+        searchQuery={searchQuery}
+        onResetInput={handleResetInput}
+      />
+      {isLoading ? (
+        <Preloader />
+      ) : filteredMovies.length ? (
+        <MoviesCardList
+          movies={filteredMovies}
+          savedMovies={savedMovies}
+          onLikeMovie={onLikeMovie}
+        />
+      ) : (
+        searchedMovies && (
+          <p className="movies__not-found">
+            Ничего не найдено
+          </p>
+        )
+      )}
     </section>
   );
 };

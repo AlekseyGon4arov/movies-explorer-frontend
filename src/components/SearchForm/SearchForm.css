@@ -20,7 +20,7 @@
 
 .search-form__input {
   border: none;
-  width: 100%;
+  width: 94%;
   display: block;
   padding: 7px 4px 9px 32px;
   margin-right: 10px;
@@ -38,6 +38,21 @@
   height: 34px;
   margin-right: 19px;
   cursor: pointer;
+}
+
+.search-form__reset-button {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  opacity: 0.4;
+}
+
+.search-form__reset-button:hover {
+  opacity: 0.8;
+  transition: all 0.3s linear;
 }
 
 .search-form__button:disabled {
@@ -58,6 +73,7 @@
 
 .search-form__button:hover {
   opacity: 0.8;
+  transition: all 0.3s linear;
 }
 
 .search-form__button:focus {

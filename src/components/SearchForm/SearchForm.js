@@ -1,51 +1,91 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './SearchForm.css';
 import FilterCheckbox from '../FilterCheckbox/FilterCheckbox';
-import { useFormAndValidation } from '../../hooks/useFormAndValidation';
 import IconFind from '../../images/find.svg';
+import IconClose from '../../images/icon-close.svg';
 
-const SearchForm = ({ onFilter }) => {
-  const { values, handleChange, errors, isValid } = useFormAndValidation();
+
+const SearchForm = ({ onFilter, searchQuery, onResetInput }) => {
+  const [searchText, setSearchText] = useState('');
+  const [error, setError] = useState('');
   const isChecked = JSON.parse(localStorage.getItem('filterCheckBox'));
   const [isShortFilmChecked, setIsShortFilmChecked] = useState(isChecked);
 
+  useEffect(() => {
+    if (searchQuery.searchText) {
+      setSearchText(searchQuery.searchText);
+    }
+  }, [searchQuery.searchText]);
+
+  const handleChange = (e) => {
+    setSearchText(e.target.value);
+  };
+
   const checkFilterBox = () => {
-    setIsShortFilmChecked(!isShortFilmChecked);
-    localStorage.setItem('filterCheckBox', !isShortFilmChecked);
+    if (searchText !== '') {
+      setIsShortFilmChecked(!isShortFilmChecked);
+
+      onFilter({
+        searchText: searchText,
+        isShortFilmChecked: !isShortFilmChecked
+      });
+    } else {
+      setIsShortFilmChecked(!isShortFilmChecked);
+
+      onFilter({
+        searchText: searchQuery.searchText,
+        isShortFilmChecked: !isShortFilmChecked
+      });
+    }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (!searchText) {
+      setError('Нужно ввести ключевое слово');
+      return;
+    } else {
+      onFilter({ searchText, isShortFilmChecked });
+    }
   };
 
   return (
     <div className="search">
-       <form
-        className="search-form"
-        onSubmit={(e) => {
-          e.preventDefault();
-          onFilter({ searchText: values.search, isShortFilmChecked });
-        }}
-      >
+      <form className="search-form" onSubmit={handleSubmit}>
         <div className="search-form__input-field">
           <input
             className="search-form__input"
             name="search"
-            type="search"
-            value={values.search || ''}
+            value={searchText || ''}
             placeholder="Фильм"
             min="1"
             onChange={handleChange}
-            required
           />
-          <span className={`search-form__input-error`}>{errors.search}</span>
+
+          {searchText && (
+            <button
+              className="search-form__reset-button"
+              type="button"
+              onClick={() => {
+                onResetInput();
+                setSearchText('');
+              }}
+            >
+              <img src={IconClose} alt="Изображение иконки сброса" />
+            </button>
+          )}
+
+          <span className={`search-form__input-error`}>
+             {!searchText && error}
+          </span>
         </div>
 
-        <button
-          type="submit"
-          className="search-form__button"
-          disabled={!isValid}
-        >
+        <button type="submit" className="search-form__button">
           <img src={IconFind} alt="Изображение иконки поиска" />
         </button>
         <FilterCheckbox
-          isChecked={isShortFilmChecked}
+          isChecked={searchQuery.isShortFilmChecked}
           onCheck={checkFilterBox}
         />
       </form>

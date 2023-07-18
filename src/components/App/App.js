@@ -37,7 +37,7 @@ function App() {
  const [savedMovies, setSavedMovies] = useState([]);
 
   const mainApi = new MainApi({
-    url: 'https://api.kinofilms.nomoreparties.sbs',
+    url: 'http://localhost:3001',
     headers: {
       'Content-Type': 'application/json',
       authorization: `Bearer ${localStorage.getItem('jwt')}`
@@ -84,17 +84,32 @@ function App() {
         });
 
     isLoggedIn &&
-      moviesApi.getMovies().then((movies) => {
-        setMovies(movies);
-      });
-
-    isLoggedIn &&
       mainApi.getSavedMovies().then((data) => {
         setSavedMovies(data);
-      });
-
-    console.log(savedMovies);
+        localStorage.setItem('savedMovies', JSON.stringify(data));
+      });  
   }, [isLoggedIn]);
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      if (localStorage.getItem('movies')) {
+        setMovies(JSON.parse(localStorage.getItem('movies')));
+      } else {
+        moviesApi
+          .getMovies()
+          .then((movies) => {
+            localStorage.setItem('movies', JSON.stringify(movies));
+            setMovies(JSON.parse(localStorage.getItem('movies')));
+          })
+          .catch((error) => console.log(error));
+      }
+    }
+  }, [isLoggedIn]);
+
+  useEffect(() => {
+    isLoggedIn &&
+      localStorage.setItem('savedMovies', JSON.stringify(savedMovies));
+  }, [savedMovies, isLoggedIn]);
 
   const handleLogin = (values) => {
     auth
@@ -146,19 +161,50 @@ function App() {
   };
 
   const handleSignOut = () => {
-    localStorage.removeItem('jwt');
+    localStorage.clear();
     navigate('/');
     setIsLoggedIn(false);
   };
 
-  const handleSaveMovie = (movie) => {
-    console.log(movie);
-    mainApi.saveMovie(movie);
+  const handleLikeMovie = (movie, isLiked, id) => {
+    if (isLiked) {
+      handleDeleteMovie(id);
+    } else {
+      mainApi
+        .saveMovie(movie)
+        .then((res) => {
+          setSavedMovies([...savedMovies, res]);
+          console.log(res);
+        })
+        .catch((error) => console.log(error));
+    }
   };
 
   const handleDeleteMovie = (id) => {
-    console.log(id);
-    mainApi.deleteMovie(id);
+    const searchedSavedMovies = JSON.parse(
+      localStorage.getItem('searchedSavedMovies')
+    );
+
+    mainApi
+      .deleteMovie(id)
+      .then((res) => {
+        const updatedSavedMovies = savedMovies.filter(
+          (movie) => movie._id !== id
+        );
+        setSavedMovies(updatedSavedMovies);
+
+        if (searchedSavedMovies) {
+          const updatedSearchedSavedMovies = searchedSavedMovies.filter(
+            (movie) => movie._id !== id
+          );
+
+          localStorage.setItem(
+            'searchedSavedMovies',
+            JSON.stringify(updatedSearchedSavedMovies)
+          );
+        }
+      })
+      .catch((error) => console.log(error));
   };
 
   return (
@@ -203,7 +249,8 @@ function App() {
                     element={Movies}
                     isLoggedIn={isLoggedIn}
                     movies={movies}
-                    onSaveMovie={handleSaveMovie}
+                    savedMovies={savedMovies}
+                    onLikeMovie={handleLikeMovie}
                   />
                 }
               />

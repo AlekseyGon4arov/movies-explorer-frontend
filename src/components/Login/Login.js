@@ -4,12 +4,12 @@ import { useNavigate } from 'react-router-dom';
 import './Login.css';
 import Logo from '../../images/logo.svg';
 import { Link } from 'react-router-dom';
-import { validateEmail } from '../../utils/validateEmail';
+import { validateEmail } from '../../utils/validation';
 
 const Login = ({ onLogin, isLoggedIn, apiErrors }) => {
   const { values, handleChange, errors, isValid } = useFormAndValidation();
   const navigate = useNavigate();
-
+  
   useEffect(() => {
     if (isLoggedIn) {
       navigate('/movies');
