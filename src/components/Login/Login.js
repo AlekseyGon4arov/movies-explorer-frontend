@@ -34,6 +34,7 @@ const Login = ({ onLogin, isLoggedIn, apiErrors }) => {
           <label className="form__label" htmlFor="user-email-input">
             E-mail
           </label>
+
           <input
             className="form__input"
             id="user-email-input"
@@ -46,6 +47,7 @@ const Login = ({ onLogin, isLoggedIn, apiErrors }) => {
             maxLength="40"
             required
           />
+
           <span className={`form__input-error form__input-error_active`}>
             {validateEmail(values.email).message}
           </span>
@@ -55,6 +57,7 @@ const Login = ({ onLogin, isLoggedIn, apiErrors }) => {
           <label className="form__label" htmlFor="user-password-input">
             Пароль
           </label>
+
           <input
             className="form__input"
             id="user-password-input"
@@ -66,6 +69,7 @@ const Login = ({ onLogin, isLoggedIn, apiErrors }) => {
             minLength="1"
             required
           />
+
           <span
             className={`form__input-error ${
               isValid ? '' : 'form__input-error_active'
@@ -73,7 +77,12 @@ const Login = ({ onLogin, isLoggedIn, apiErrors }) => {
           >
             {errors.password}
           </span>
-          <span className="form__api-error">{apiErrors.login.errorText}</span>
+          
+          <span className="form__api-error">
+            {apiErrors.login.message === 'Failed to fetch'
+              ? 'При авторизации произошла ошибка'
+              : apiErrors.login.errorText}
+          </span>
         </div>
 
         <button

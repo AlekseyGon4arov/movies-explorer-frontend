@@ -8,7 +8,6 @@ const Profile = ({ onSignOut, onUpdateUser, apiErrors, isOK }) => {
   const { values, handleChange, isValid, setValues, setIsValid } =
     useFormAndValidation();
   const { currentUser } = useContext(CurrentUserContext);
-  console.log(currentUser);
   const [showSaveBtn, setShowSaveBtn] = useState(false);
   const [showSuccessMsg, setShowSuccessMsg] = useState(false);
 

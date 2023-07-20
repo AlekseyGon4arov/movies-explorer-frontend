@@ -35,6 +35,10 @@
   font-weight: 500;
   font-size: 13px;
   line-height: 16px;
+  max-width: 90%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .moviescard__duration {
@@ -85,17 +89,17 @@
 }
 
 @media screen and (max-width: 920px) {
-  .moviescard {
-    max-width: 339px;
-    max-height: 262px;
-  }
-
   .moviescard__name {
     margin: 0 0 12px;
   }
 }
 
 @media screen and (max-width: 768px) {
+  .moviescard {
+    max-width: 339px;
+    max-height: 262px;
+  }
+
   .moviescard__image {
     vertical-align: bottom;
     transition: all 0.16s linear;

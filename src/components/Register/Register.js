@@ -34,6 +34,7 @@ const Register = ({ onRegister, isLoggedIn, apiErrors }) => {
           <label className="register-form__label" htmlFor="user-name-input">
             Имя
           </label>
+
           <input
             className="register-form__input"
             id="user-name-input"
@@ -46,6 +47,7 @@ const Register = ({ onRegister, isLoggedIn, apiErrors }) => {
             maxLength="40"
             required
           />
+
           <span className={`register-form__input-error`}>
             {validateName(values.name).message}
           </span>
@@ -55,6 +57,7 @@ const Register = ({ onRegister, isLoggedIn, apiErrors }) => {
           <label className="register-form__label" htmlFor="user-email-input">
             E-mail
           </label>
+
           <input
             className="register-form__input"
             id="user-email-input"
@@ -67,6 +70,7 @@ const Register = ({ onRegister, isLoggedIn, apiErrors }) => {
             maxLength="40"
             required
           />
+
           <span className={`form__input-error form__input-error_active`}>
              {validateEmail(values.email).message}
           </span>
@@ -76,6 +80,7 @@ const Register = ({ onRegister, isLoggedIn, apiErrors }) => {
           <label className="register-form__label" htmlFor="user-password-input">
             Пароль
           </label>
+
           <input
             className="register-form__input"
             id="user-password-input"
@@ -87,6 +92,7 @@ const Register = ({ onRegister, isLoggedIn, apiErrors }) => {
             minLength="1"
             required
           />
+
           <span
             className={`register-form__input-error ${
               isValid ? '' : 'register-form__input-error_active'
@@ -94,8 +100,11 @@ const Register = ({ onRegister, isLoggedIn, apiErrors }) => {
           >
             {errors.password}
           </span>
+
           <span className="register-form__api-error">
-            {apiErrors.register.errorText}
+            {apiErrors.register.message === 'Failed to fetch'
+              ? 'При регистрации пользователя произошла ошибка'
+              : apiErrors.register.errorText}
           </span>
         </div>
 

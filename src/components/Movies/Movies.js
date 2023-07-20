@@ -4,7 +4,7 @@ import SearchForm from '../SearchForm/SearchForm';
 import MoviesCardList from '../MoviesCardList/MoviesCardList';
 import Preloader from '../Preloader/Preloader';
 
-const Movies = ({ movies, savedMovies, onLikeMovie }) => {
+const Movies = ({ movies, savedMovies, onLikeMovie, apiErrors }) => {
   const [filteredMovies, setFilteredMovies] = useState([]);
   const searchedMovies = localStorage.getItem('searchedMovies');
   const queries = localStorage.getItem('searchQueryMovies');
@@ -69,7 +69,16 @@ const Movies = ({ movies, savedMovies, onLikeMovie }) => {
         onFilter={filterMovies}
         searchQuery={searchQuery}
         onResetInput={handleResetInput}
+        apiErrors={apiErrors}
       />
+      {apiErrors?.movies && Object.keys(apiErrors?.movies).length !== 0 ? (
+        <p className="movies__api-error">
+          Во время запроса произошла ошибка. Возможно, проблема с соединением
+          или сервер недоступен. Подождите немного и попробуйте ещё раз
+        </p>
+      ) : (
+        ''
+      )}
       {isLoading ? (
         <Preloader />
       ) : filteredMovies.length ? (

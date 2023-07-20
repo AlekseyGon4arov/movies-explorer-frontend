@@ -52,6 +52,5 @@ class Auth {
 }
 
 export const auth = new Auth({
-  // url: 'https://api.kinofilms.nomoreparties.sbs'
-  url: 'http://localhost:3001'
+  url: 'https://api.kinofilms.nomoreparties.sbs'
 });

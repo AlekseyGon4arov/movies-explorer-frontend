@@ -5,7 +5,7 @@ import IconFind from '../../images/find.svg';
 import IconClose from '../../images/icon-close.svg';
 
 
-const SearchForm = ({ onFilter, searchQuery, onResetInput }) => {
+const SearchForm = ({ onFilter, searchQuery, onResetInput, apiErrors }) => {
   const [searchText, setSearchText] = useState('');
   const [error, setError] = useState('');
   const isChecked = JSON.parse(localStorage.getItem('filterCheckBox'));

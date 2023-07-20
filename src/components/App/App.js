@@ -28,7 +28,8 @@ function App() {
   const [apiErrors, setApiErrors] = useState({
     login: {},
     register: {},
-    profile: {}
+    profile: {},
+    movies: {}
   });
   const [isOK, setIsOK] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -37,7 +38,7 @@ function App() {
  const [savedMovies, setSavedMovies] = useState([]);
 
   const mainApi = new MainApi({
-    url: 'http://localhost:3001',
+    url: 'https://api.kinofilms.nomoreparties.sbs',
     headers: {
       'Content-Type': 'application/json',
       authorization: `Bearer ${localStorage.getItem('jwt')}`
@@ -70,6 +71,7 @@ function App() {
     } else {
       setIsLoading(false);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -84,10 +86,14 @@ function App() {
         });
 
     isLoggedIn &&
-      mainApi.getSavedMovies().then((data) => {
-        setSavedMovies(data);
-        localStorage.setItem('savedMovies', JSON.stringify(data));
-      });  
+      mainApi
+        .getSavedMovies()
+        .then((data) => {
+          setSavedMovies(data);
+          localStorage.setItem('savedMovies', JSON.stringify(data));
+        })
+        .catch((error) => console.log(error));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoggedIn]);
 
   useEffect(() => {
@@ -99,11 +105,16 @@ function App() {
           .getMovies()
           .then((movies) => {
             localStorage.setItem('movies', JSON.stringify(movies));
-            setMovies(JSON.parse(localStorage.getItem('movies')));
+            setMovies(movies);
+            setApiErrors({ ...apiErrors, movies: {} });
           })
-          .catch((error) => console.log(error));
+          .catch((error) => {
+            setApiErrors({ ...apiErrors, movies: error });
+            console.log(error);
+          });
       }
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps  
   }, [isLoggedIn]);
 
   useEffect(() => {
@@ -174,7 +185,6 @@ function App() {
         .saveMovie(movie)
         .then((res) => {
           setSavedMovies([...savedMovies, res]);
-          console.log(res);
         })
         .catch((error) => console.log(error));
     }
@@ -251,6 +261,7 @@ function App() {
                     movies={movies}
                     savedMovies={savedMovies}
                     onLikeMovie={handleLikeMovie}
+                    apiErrors={apiErrors}
                   />
                 }
               />
