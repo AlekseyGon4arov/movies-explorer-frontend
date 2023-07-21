@@ -80,6 +80,7 @@
 .profile-form__button-save:disabled {
   background: #f8f8f8;
   color: #c2c2c2;
+  cursor: default;
 }
 
 .profile-form__button-edit {

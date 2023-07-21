@@ -3,6 +3,8 @@ import './Movies.css';
 import SearchForm from '../SearchForm/SearchForm';
 import MoviesCardList from '../MoviesCardList/MoviesCardList';
 import Preloader from '../Preloader/Preloader';
+import useResize from '../../hooks/useResize.js';
+
 
 const Movies = ({ movies, savedMovies, onLikeMovie, apiErrors }) => {
   const [filteredMovies, setFilteredMovies] = useState([]);
@@ -10,6 +12,9 @@ const Movies = ({ movies, savedMovies, onLikeMovie, apiErrors }) => {
   const queries = localStorage.getItem('searchQueryMovies');
   const [searchQuery, setSearchQuery] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  const size = useResize();
+
+  const countToRender = size.width < 768 ? 5 : size.width < 1280 ? 8 : 12;
 
   useEffect(() => {
     if (searchedMovies) {
@@ -36,7 +41,7 @@ const Movies = ({ movies, savedMovies, onLikeMovie, apiErrors }) => {
         filtered = movies.filter((m) => {
           return (
             m.duration <= 40 &&
-            m.nameRU.toLowerCase().trim().includes(query.searchText)
+            m.nameRU.toLowerCase().trim().includes(query.searchText.toLowerCase())
           );
         });
 
@@ -44,7 +49,7 @@ const Movies = ({ movies, savedMovies, onLikeMovie, apiErrors }) => {
         localStorage.setItem('searchedMovies', JSON.stringify(filtered));
       } else if (!query.isShortFilmChecked) {
         filtered = movies.filter((m) => {
-          return m.nameRU.toLowerCase().trim().includes(query.searchText);
+          return m.nameRU.toLowerCase().trim().includes(query.searchText.toLowerCase());
         });
 
         setFilteredMovies(filtered);
@@ -86,6 +91,8 @@ const Movies = ({ movies, savedMovies, onLikeMovie, apiErrors }) => {
           movies={filteredMovies}
           savedMovies={savedMovies}
           onLikeMovie={onLikeMovie}
+          countToRender={countToRender}
+          paginationCount={size.width >= 1280 ? 3 : 2}
         />
       ) : (
         searchedMovies && (

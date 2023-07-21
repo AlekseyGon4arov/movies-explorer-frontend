@@ -2,15 +2,15 @@ import { useState, useMemo, useEffect } from 'react';
 import './MoviesCardList.css';
 import MoviesCard from '../MoviesCard/MoviesCard';
 import { useLocation } from 'react-router-dom';
-import useResize from '../../hooks/useResize.js';
 
 const MoviesCardList = ({
   movies,
   savedMovies,
   onLikeMovie,
-  onDeleteMovie
+  onDeleteMovie,
+  countToRender,
+  paginationCount
 }) => {
-  let size = useResize();
   const [moviesToAdd, setMoviesToAdd] = useState(0);
   let location = useLocation();
 
@@ -19,10 +19,11 @@ const MoviesCardList = ({
   }, [movies]);
 
   const moviesToRender = useMemo(() => {
-    const countToRender = size.width < 768 ? 5 : size.width < 1280 ? 8 : 12;
-
+    if (!countToRender) {
+      return movies;
+    }
     return movies.slice(0, countToRender + moviesToAdd);
-  }, [movies, moviesToAdd, size]);
+  }, [movies, moviesToAdd, countToRender]);
 
   return (
     <>
@@ -43,7 +44,7 @@ const MoviesCardList = ({
         movies.length > moviesToRender.length && (
           <button
             onClick={() => {
-              setMoviesToAdd((prev) => prev + (size.width >= 1280 ? 3 : 2));
+              setMoviesToAdd((prev) => prev + paginationCount);
             }}
             className="movies__more-btn"
           >
