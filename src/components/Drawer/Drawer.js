@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import './Drawer.css';
 import Navigation from '../Navigation/Navigation';
 
-const Drawer = ({ isLoggedIn }) => {
+const Drawer = ({ isLoggedIn, isLinksWhite}) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleDrawer = () => {
@@ -28,11 +28,13 @@ const Drawer = ({ isLoggedIn }) => {
 
   return (
     <div className="drawer">
-      <button className="drawer__burger-btn" onClick={toggleDrawer}></button>
+      <button className={`drawer__burger-btn ${isLinksWhite && 'drawer__burger-btn-white'}`} onClick={toggleDrawer}></button>
       {isOpen && <div className="drawer__overlay" onClick={closeDrawer}></div>}
       <div
         onClick={(e) => (e.target.href ? closeDrawer() : '')}
-        className={`drawer__container ${isOpen ? 'drawer__container_open' : ''}`}
+        className={`drawer__container ${
+          isOpen ? 'drawer__container_open' : ''
+        }`}
       >
         <button className="drawer__close-btn" onClick={closeDrawer}></button>
 

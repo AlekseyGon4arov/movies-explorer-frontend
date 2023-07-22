@@ -1,14 +1,19 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import './Register.css';
+import { Link, useNavigate } from 'react-router-dom';
 import { useFormAndValidation } from '../../hooks/useFormAndValidation';
 import Logo from '../../images/logo.svg';
-import './Register.css';
+import { validateEmail, validateName } from '../../utils/validation';
 
-const Register = () => {
+const Register = ({ onRegister, isLoggedIn, apiErrors }) => {
   const { values, handleChange, errors, isValid } = useFormAndValidation();
-  const onRegister = (val) => {
-    console.log(val);
-  };
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      navigate('/movies');
+    }
+  }, [isLoggedIn]);
 
   return (
     <section className="register-page">
@@ -29,6 +34,7 @@ const Register = () => {
           <label className="register-form__label" htmlFor="user-name-input">
             Имя
           </label>
+
           <input
             className="register-form__input"
             id="user-name-input"
@@ -41,12 +47,9 @@ const Register = () => {
             maxLength="40"
             required
           />
-          <span
-            className={`register-form__input-error ${
-              isValid ? '' : 'register-form__input-error_active'
-            }`}
-          >
-            {errors.name}
+
+          <span className={`register-form__input-error`}>
+            {validateName(values.name).message}
           </span>
         </div>
 
@@ -54,6 +57,7 @@ const Register = () => {
           <label className="register-form__label" htmlFor="user-email-input">
             E-mail
           </label>
+
           <input
             className="register-form__input"
             id="user-email-input"
@@ -66,12 +70,9 @@ const Register = () => {
             maxLength="40"
             required
           />
-          <span
-            className={`register-form__input-error ${
-              isValid ? '' : 'register-form__input-error_active'
-            }`}
-          >
-            {errors.email}
+
+          <span className={`form__input-error form__input-error_active`}>
+             {validateEmail(values.email).message}
           </span>
         </div>
 
@@ -79,6 +80,7 @@ const Register = () => {
           <label className="register-form__label" htmlFor="user-password-input">
             Пароль
           </label>
+
           <input
             className="register-form__input"
             id="user-password-input"
@@ -87,10 +89,10 @@ const Register = () => {
             onChange={handleChange}
             type="password"
             placeholder="Введите пароль"
-            minLength="6"
-            maxLength="200"
+            minLength="1"
             required
           />
+
           <span
             className={`register-form__input-error ${
               isValid ? '' : 'register-form__input-error_active'
@@ -98,15 +100,22 @@ const Register = () => {
           >
             {errors.password}
           </span>
+
           <span className="register-form__api-error">
-            Что-то пошло не так...
+            {apiErrors.register.message === 'Failed to fetch'
+              ? 'При регистрации пользователя произошла ошибка'
+              : apiErrors.register.errorText}
           </span>
         </div>
 
         <button
           type="submit"
           className="register-form__btn"
-          disabled={!isValid}
+          disabled={
+            !isValid ||
+            validateEmail(values.email).invalid ||
+            validateName(values.name).invalid
+          }
         >
           Зарегистрироваться
         </button>
