@@ -38,7 +38,8 @@ function App() {
  const [savedMovies, setSavedMovies] = useState([]);
 
   const mainApi = new MainApi({
-    url: 'https://api.kinofilms.nomoreparties.sbs',
+    // url: 'https://api.kinofilms.nomoreparties.sbs',
+    url: 'http://localhost:3000',
     headers: {
       'Content-Type': 'application/json',
       authorization: `Bearer ${localStorage.getItem('jwt')}`
