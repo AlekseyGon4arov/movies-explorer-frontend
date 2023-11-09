@@ -27,16 +27,18 @@ Movies Explorer - это интерактивная SPA-страница, на �
 
 Клонировать репозиторий:
 
-###Backend:
+### Backend:
 
 git clone https://github.com/AlekseyGon4arov/movies-explorer-api
 
-Запустить локально: npm run dev
+- Запустить локально:
+  npm run dev
 
-###Frontend:
+### Frontend:
 
 git clone https://github.com/AlekseyGon4arov/movies-explorer-frontend
 
-Запустить локально: npm start
+- Запустить локально:
+  npm start
 
 [Ссылка на макет](https://disk.yandex.ru/d/HtEbpfcWXEdq5g)
